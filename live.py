@@ -69,6 +69,8 @@ maskNet.allocate_tensors()
 print("[INFO] starting video stream...")
 vs = VideoStream(src=0).start()
 
+i = 0
+
 while True:
     frame = vs.read()
     frame = imutils.resize(frame, width=400)
@@ -80,15 +82,17 @@ while True:
         mask = pred[0]
         withoutMask = pred[1]
 
-        if mask > 0.98:
+        if mask > withoutMask:
             label = "Mask"
             color = (0, 255, 0)
             print("Normal")
         else:
+            if i % 120 == 0:
+                sound.play()
             label = "No Mask"
             color = (0, 0, 255)
-            sound.play()
             print("Alert!!!")
+        i+=1
 
         label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
