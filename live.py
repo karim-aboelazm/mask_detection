@@ -1,18 +1,19 @@
-import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
+from pygame import mixer
 from imutils.video import VideoStream
+import tensorflow as tf
 import numpy as np
 import argparse
 import imutils
 import time
 import cv2
 import os
-from pygame import mixer
 
 mixer.init()
-sound = mixer.Sound('sound.wav')
+sound1 = mixer.Sound('output.wav')
+sound2 = mixer.Sound('sound.wav')
 
 def mask_detection_prediction(frame, faceNet, maskNet):
 
@@ -83,12 +84,14 @@ while True:
         withoutMask = pred[1]
 
         if mask > withoutMask:
+            if i % 80 == 0:
+                sound1.play()
             label = "Mask"
             color = (0, 255, 0)
             print("Normal")
         else:
-            if i % 120 == 0:
-                sound.play()
+            if i % 80 == 0:
+                sound2.play()
             label = "No Mask"
             color = (0, 0, 255)
             print("Alert!!!")
